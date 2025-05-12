@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lyrics Finder</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
+    input, button { padding: 10px; margin-top: 10px; width: 100%; }
+    pre { white-space: pre-wrap; background: #f4f4f4; padding: 10px; border: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <h2>🎵 Lyrics Finder</h2>
+  <input id="artist" type="text" placeholder="Artist name" />
+  <input id="title" type="text" placeholder="Song title" />
+  <button onclick="getLyrics()">Get Lyrics</button>
+  <pre id="output">Lyrics will appear here...</pre>
+
+  <script>
+    async function getLyrics() {
+      const artist = document.getElementById('artist').value;
+      const title = document.getElementById('title').value;
+      const output = document.getElementById('output');
+
+      if (!artist || !title) {
+        output.textContent = "Please enter both artist and song title.";
+        return;
+      }
+
+      output.textContent = "Fetching lyrics...";
+      try {
+        const res = await fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`);
+        const data = await res.json();
+        if (data.lyrics) {
+          output.textContent = data.lyrics;
+        } else {
+          output.textContent = "Lyrics not found.";
+        }
+      } catch (err) {
+        output.textContent = "Error fetching lyrics.";
+      }
+    }
+  </script>
+</body>
+</html>
